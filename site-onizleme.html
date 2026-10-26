@@ -83,7 +83,7 @@ input[type=range]{width:100%;accent-color:var(--yb)}
 .alt{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--k);color:var(--m);font-size:14px}
 .dt{background:none;color:var(--y);min-height:36px;padding:0}
 .bk{border-color:color-mix(in srgb,var(--c1) 40%,transparent)}.bk.yk{border-color:#E57373}
-.bt{display:flex;gap:14px;margin:12px 0;align-items:center}.mini{width:92px;height:92px;border-radius:14px;position:relative;overflow:hidden;flex:none;background:linear-gradient(135deg,#1d5a19,#0f2d0d)}.mini .cz{width:100%;right:0;top:4px}
+.bt{display:flex;gap:14px;margin:12px 0;align-items:center}.mini{width:120px;height:120px;border-radius:16px;box-shadow:0 4px 14px rgba(0,0,0,.25);position:relative;overflow:hidden;flex:none;background:linear-gradient(135deg,#1d5a19,#0f2d0d)}.mini .cz{width:100%;right:0;top:4px}
 .la{font-family:Georgia,serif;font-style:italic;color:var(--m);font-size:14px;margin-top:4px}
 .ks{display:flex;justify-content:space-between;gap:12px;padding-top:10px;border-top:1px solid var(--k);font-size:14px}.ks span{color:var(--m);flex:none}.ks b{text-align:right;font-weight:600}
 .nd{background:color-mix(in srgb,#E53935 10%,var(--b));border:1px solid #E5737399;border-radius:12px;padding:10px;margin-top:10px;font-size:13px;line-height:1.5}.nd b{color:var(--er);display:block;margin-bottom:4px}
@@ -489,7 +489,7 @@ function gKey(o) {
 function cizim(k, o) { return '<svg viewBox="0 0 200 140" width="100%" aria-hidden="true">' + (CZ[k] || CZ.genel)(o) + "</svg>"; }
 function fotoUrl(ad) {
   return fetch("https://tr.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(ad)).then((r) => (r.ok ? r.json() : null)).then((j) => {
-    if (j && j.type !== "disambiguation" && j.thumbnail) return j.thumbnail.source;
+    if (j && j.type !== "disambiguation" && j.thumbnail) return j.thumbnail.source.replace(/\/(\d+)px-/, "/800px-");
     return fetch("https://tr.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrlimit=1&gsrsearch=" + encodeURIComponent(ad) + "&prop=pageimages&piprop=thumbnail&pithumbsize=600").then((r) => r.json()).then((d) => { const p = d.query && Object.values(d.query.pages)[0]; return p && p.thumbnail ? p.thumbnail.source : null; });
   }).catch(() => null);
 }
@@ -535,7 +535,7 @@ function listeCiz() {
     const bl = c.querySelectorAll(".bilgi"); bl[0].textContent = "Sıra #" + b.sira; bl[1].textContent = b.kategori || "-";
     const d = c.querySelector(".dur"); d.className = "dur " + (yk ? "dk" : "dy"); d.innerHTML = svg(yk ? "close" : "check", 16) + (yk ? " YASAKLI (KISITLI)" : " YASAL (İZİNLİ)");
     c.querySelector("h3").textContent = b.ad; c.querySelector(".la").textContent = b.latin; c.querySelector(".ks b").textContent = b.kisim || "-"; if (yk) c.querySelector(".nd div").textContent = b.neden || "Neden belirtilmemiş.";
-    const gk = gKey({ ad: b.ad, tur: b.kategori }); c.querySelector(".mini").style.background = "linear-gradient(135deg," + RENK[gk][0] + "," + RENK[gk][1] + ")"; c.querySelector(".cz").innerHTML = cizim(gk, { ad: b.ad }); foto(b.ad.split(",")[0], c, [b.latin], gk);
+    const gk = gKey({ ad: b.ad, tur: b.kategori }); c.querySelector(".mini").style.background = "linear-gradient(135deg," + RENK[gk][0] + "," + RENK[gk][1] + ")"; c.querySelector(".cz").innerHTML = cizim(gk, { ad: b.ad }); foto(b.ad.split(",")[0], c, [String(b.latin||"").replace(/ (L\.|Lam\.|Willd\.).*$/,"").replace(/\(.*$/,"").trim()], gk);
     l.appendChild(c);
   });
 }
